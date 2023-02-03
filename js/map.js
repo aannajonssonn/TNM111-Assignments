@@ -11,19 +11,19 @@ function worldMap(data) {
     /**
      * Task 14 - Create a leaflet map and put center to 10,15 with zoom scale of 1
      */
-    var leaflet_map = L.map('mapid').setView([10, 15], 1);
+    var world_map = L.map('mapid').setView([10, 15], 1);
     /**
      * Task 15 - Get the tileLayer from the link at the bottom of this file
      * and add it to the map created above.
     */
-    L.tileLayer(map_link()).addTo(leaflet_map);
+    L.tileLayer(map_link()).addTo(world_map);
 
     /**
      * Task 16 - Create an svg call on top of the leaflet map.
      * Also append a g tag on this svg tag and add class leaflet-zoom-hide.
      * This g tag will be needed later.
      */
-    let svg_map = d3.select(leaflet_map.getPanes().overlayPane).append("svg");
+    let svg_map = d3.select(world_map.getPanes().overlayPane).append("svg");
     let g_map = svg_map.append("g").attr("class", "leaflet-zoom-hide");
 
     /**
@@ -32,7 +32,7 @@ function worldMap(data) {
      */
     //Function to project lat/lng points on the map
     function projectPointsOnMap(x, y) {
-        var point = leaflet_map.latLngToLayerPoint(new L.LatLng(y, x));
+        var point = world_map.latLngToLayerPoint(new L.LatLng(y, x));
         this.stream.point(point.x, point.y);
     }
 
@@ -52,7 +52,7 @@ function worldMap(data) {
         var x = d.geometry.coordinates[0];
         var y = d.geometry.coordinates[1];
         //Remove comment when reached task 19
-        return leaflet_map.latLngToLayerPoint(new L.LatLng(y, x));
+        return world_map.latLngToLayerPoint(new L.LatLng(y, x));
     }
 
     //<---------------------------------------------------------------------------------------------------->
@@ -82,7 +82,7 @@ function worldMap(data) {
 
     //Redraw the dots each time we interact with the map
     //Remove comment tags when done with task 20
-    leaflet_map.on("moveend", reset);
+    world_map.on("moveend", reset);
     reset();
 
     //Mouseover
@@ -101,7 +101,7 @@ function worldMap(data) {
                 points.tooltip(d);
 
                 //Uncomment if implemented
-                //focus_plus_context.hovered();
+                focus_plus_context.hovered();
 
             });
     }
@@ -113,7 +113,7 @@ function worldMap(data) {
             .on("mouseout", function () {
                 d3.select(this)
                     .transition()
-                    .duration(500)
+                    .duration(50)
                     .attr("r", function (d) {
                         if (d.properties.DEATHS == null) {
                             return 3;
@@ -160,15 +160,16 @@ function worldMap(data) {
             .filter(function (d) { return curr_view_erth.indexOf(d.id) != -1; })
             .attr('r', 7)
             .transition()
-            .duration(800);
+            .duration(50);
 
         //Call plot funtion.
         points.plot(map_points_change)
+        console.log("Map points changed");
 
         d3.selectAll(".mapcircle")
             .filter(function (d) { return curr_view_erth.indexOf(d.id) == -1; })
             .transition()
-            .duration(800)
+            .duration(50)
             .attr('r', 0)
     }
 

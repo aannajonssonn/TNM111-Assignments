@@ -58,7 +58,7 @@ function focusPlusContext(data) {
         .range([0, width]);
 
     var navYScale = d3.scaleLinear()
-        .range([height2, 0])
+        .range([height2, 0]);
 
     var navXAxis = d3.axisBottom(navXScale);
 
@@ -71,10 +71,10 @@ function focusPlusContext(data) {
     var maxDate = d3.max(data.features, function (d) { return parseDate(d.properties.Date) });
     var minDate = d3.min(data.features, function (d) { return parseDate(d.properties.Date) });
     var maxMag = d3.max(data.features, function (d) { return d.properties.EQ_PRIMARY });
-    var minMag = d3.min(data.features, function (d) { return d.properties.EQ_PRIMARY })
+    var minMag = d3.min(data.features, function (d) { return d.properties.EQ_PRIMARY });
 
     //Calculate todays date.
-    maxDate_plus = new Date(maxDate.getTime() + 300 * 144000000)
+    maxDate_plus = new Date(maxDate.getTime() + 300 * 144000000);
 
     /**
      * Task 5 - Set the axes scales, both for focus and context.
@@ -207,13 +207,13 @@ function focusPlusContext(data) {
                 points_selected.tooltip(d);
 
                 //Rescale the dots onhover
-                d3.select(this).attr('r', 15)
+                d3.select(this).attr('r', 15);
 
                 //Rescale the dots on the map.
                 curent_id = d3.select(this)._groups[0][0].__data__.id.toString()
                 d3.selectAll(".mapcircle")
                     .filter(function (d) { return d.id === curent_id; })
-                    .attr('r', 15)
+                    .attr('r', 15);
 
                 //Call map hover function if implemented!
                 //world_map.hovered(d.id);
@@ -235,7 +235,7 @@ function focusPlusContext(data) {
                         else {
                             return scaleQuantRad(d.properties.DEATHS);
                         }
-                    })
+                    });
 
                 //Reset all the dots on the map
                 d3.selectAll(".mapcircle")
@@ -249,7 +249,7 @@ function focusPlusContext(data) {
                         else {
                             return scaleQuantRad(d.properties.DEATHS);
                         }
-                    })
+                    });
             });
     }
     //<---------------------------------------------------------------------------------------------------->
@@ -283,8 +283,8 @@ function focusPlusContext(data) {
             })
 
         focus.select(".axis--x").call(xAxis);
-
-        if (d3.event.type == "end") {
+        //map update on brush instead of on end, more interactive, too slow?
+        if (d3.event.type == "brush") {
             var curr_view_erth = []
             d3.selectAll(".dot").each(
                 function (d, i) {
@@ -296,6 +296,7 @@ function focusPlusContext(data) {
             /**
              * Remove comment for updating dots on the map.
              */
+
             curr_points_view = world_map.change_map_points(curr_view_erth)
         }
     }
