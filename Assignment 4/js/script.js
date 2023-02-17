@@ -7,27 +7,13 @@ async function getJSON() {
 }
 
 async function getEpisodeJson() {
-  const ep1 = await fetch(
-    "db/starwars-episode-1-interactions-allCharacters.json"
-  );
-  const ep2 = await fetch(
-    "db/starwars-episode-2-interactions-allCharacters.json"
-  );
-  const ep3 = await fetch(
-    "db/starwars-episode-3-interactions-allCharacters.json"
-  );
-  const ep4 = await fetch(
-    "db/starwars-episode-4-interactions-allCharacters.json"
-  );
-  const ep5 = await fetch(
-    "db/starwars-episode-5-interactions-allCharacters.json"
-  );
-  const ep6 = await fetch(
-    "db/starwars-episode-6-interactions-allCharacters.json"
-  );
-  const ep7 = await fetch(
-    "db/starwars-episode-7-interactions-allCharacters.json"
-  );
+  const ep1 = await fetch("db/starwars-episode-1-interactions-allCharacters.json");
+  const ep2 = await fetch("db/starwars-episode-2-interactions-allCharacters.json");
+  const ep3 = await fetch("db/starwars-episode-3-interactions-allCharacters.json");
+  const ep4 = await fetch("db/starwars-episode-4-interactions-allCharacters.json");
+  const ep5 = await fetch("db/starwars-episode-5-interactions-allCharacters.json");
+  const ep6 = await fetch("db/starwars-episode-6-interactions-allCharacters.json");
+  const ep7 = await fetch("db/starwars-episode-7-interactions-allCharacters.json");
 
   const ep1Data = await ep1.json();
   const ep2Data = await ep2.json();
