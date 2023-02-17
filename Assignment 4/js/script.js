@@ -37,72 +37,41 @@ async function getEpisodeJson() {
   const ep6Data = await ep6.json();
   const ep7Data = await ep7.json();
 
-  console.log(ep1Data);
-
   for (var i = 0; i < ep1Data.links.length; i++) {
     ep1Data.links[i].episode = 1;
-    // write targetName and sourceName to link
     ep1Data.links[i].target = ep1Data.nodes[ep1Data.links[i].target].name;
     ep1Data.links[i].source = ep1Data.nodes[ep1Data.links[i].source].name;
   }
   for (var i = 0; i < ep2Data.links.length; i++) {
     ep2Data.links[i].episode = 2;
-    // write targetName and sourceName to link
     ep2Data.links[i].target = ep2Data.nodes[ep2Data.links[i].target].name;
     ep2Data.links[i].source = ep2Data.nodes[ep2Data.links[i].source].name;
   }
   for (var i = 0; i < ep3Data.links.length; i++) {
     ep3Data.links[i].episode = 3;
-    // write targetName and sourceName to link
     ep3Data.links[i].target = ep3Data.nodes[ep3Data.links[i].target].name;
     ep3Data.links[i].source = ep3Data.nodes[ep3Data.links[i].source].name;
   }
   for (var i = 0; i < ep4Data.links.length; i++) {
     ep4Data.links[i].episode = 4;
-    // write targetName and sourceName to link
     ep4Data.links[i].target = ep4Data.nodes[ep4Data.links[i].target].name;
     ep4Data.links[i].source = ep4Data.nodes[ep4Data.links[i].source].name;
   }
   for (var i = 0; i < ep5Data.links.length; i++) {
     ep5Data.links[i].episode = 5;
-    // write targetName and sourceName to link
     ep5Data.links[i].target = ep5Data.nodes[ep5Data.links[i].target].name;
     ep5Data.links[i].source = ep5Data.nodes[ep5Data.links[i].source].name;
   }
   for (var i = 0; i < ep6Data.links.length; i++) {
     ep6Data.links[i].episode = 6;
-    // write targetName and sourceName to link
     ep6Data.links[i].target = ep6Data.nodes[ep6Data.links[i].target].name;
     ep6Data.links[i].source = ep6Data.nodes[ep6Data.links[i].source].name;
   }
   for (var i = 0; i < ep7Data.links.length; i++) {
     ep7Data.links[i].episode = 7;
-    // write targetName and sourceName to link
     ep7Data.links[i].target = ep7Data.nodes[ep7Data.links[i].target].name;
     ep7Data.links[i].source = ep7Data.nodes[ep7Data.links[i].source].name;
   }
-
-  //   for (var i = 0; i < ep1Data.nodes.length; i++) {
-  //     ep1Data.nodes[i].episode = "1";
-  //   }
-  //   for (var i = 0; i < ep2Data.nodes.length; i++) {
-  //     ep2Data.nodes[i].episode = "2";
-  //   }
-  //   for (var i = 0; i < ep3Data.nodes.length; i++) {
-  //     ep3Data.nodes[i].episode = "3";
-  //   }
-  //   for (var i = 0; i < ep4Data.nodes.length; i++) {
-  //     ep4Data.nodes[i].episode = "4";
-  //   }
-  //   for (var i = 0; i < ep5Data.nodes.length; i++) {
-  //     ep5Data.nodes[i].episode = "5";
-  //   }
-  //   for (var i = 0; i < ep6Data.nodes.length; i++) {
-  //     ep6Data.nodes[i].episode = "6";
-  //   }
-  //   for (var i = 0; i < ep7Data.nodes.length; i++) {
-  //     ep7Data.nodes[i].episode = "7";
-  //   }
 
   var allLinks = ep1Data.links.concat(
     ep2Data.links,
@@ -170,8 +139,7 @@ async function run() {
     )
     .force("charge", d3.forceManyBody().strength(-50))
     .force("center", d3.forceCenter(width / 4, height / 2))
-    .force("gravity", d3.forceManyBody().strength(-25))
-    .force("collide", d3.forceCollide().radius(10));
+    .force("gravity", d3.forceManyBody().strength(-25));
 
   var simulation2 = d3
     .forceSimulation(nodes)
@@ -183,8 +151,7 @@ async function run() {
     )
     .force("charge", d3.forceManyBody().strength(-50))
     .force("center", d3.forceCenter(width / 4, height / 2))
-    .force("gravity", d3.forceManyBody().strength(-25))
-    .force("collide", d3.forceCollide().radius(10));
+    .force("gravity", d3.forceManyBody().strength(-10));
 
   var link = drawLinks(links);
   var link2 = drawLinksRight(links2);
@@ -203,7 +170,7 @@ async function run() {
   var tooltipSubtitle = tooltip.append("h2").attr("class", "tooltip-subtitle");
 
   simulation.nodes(nodes).on("tick", ticked);
-  simulation2.nodes(nodes).on("tick", ticked);
+  simulation2.nodes(nodes2).on("tick", ticked2);
 
   simulation
     .force("link")
@@ -262,15 +229,63 @@ async function run() {
           .style("font-family", "sans-serif")
           .style("left", 20 + "px")
           .style("top", 70 + "px");
+        link.style("stroke", (l) => {
+          if (l.source.name === d.name || l.target.name === d.name) {
+            return "#AAAAAA";
+          } else {
+            return "#555555";
+          }
+        });
+        d3.selectAll(".node2")
+          .filter(function (l) {
+            console.log(l.name, d.name)
+            return d.name === l.name;
+          })
+          .attr('r', 15)
+        link2.style("stroke", (l) => {
+          if (l.source.name === d.name || l.target.name === d.name) {
+            return "#AAAAAA";
+          } else {
+            return "#555555";
+          }
+        });
       })
       .on(
         "mouseout",
-        (event,
-        (d) => {
+        (event, d) => {
           tooltip.transition().duration(50).style("opacity", 0);
           d3.select(event.target).transition(200).attr("r", 10);
-        })
+          tooltipSubtitle.html("");
+          tooltipTitle.html("");
+          link.style("stroke", "#555555");
+          d3.selectAll(".node2").transition(200).attr('r', 10);
+          link2.style("stroke", "#555555");
+        }
       );
+
+    link.on("mouseover", (event, d) => {
+      d3.select(event.target)
+        .transition(200)
+        .style("stroke-width", 5)
+        .style("stroke", "rgb(255, 255, 255)");
+
+      tooltip.transition().duration(200).style("opacity", 0.9);
+      tooltipSubtitle.transition().duration(200).style("opacity", 0.9);
+      tooltipTitle
+        .html(d.source.name + " - " + d.target.name)
+        .style("position", "absolute")
+        .style("font-family", "sans-serif")
+        .style("left", 20 + "px")
+        .style("top", 28 + "px");
+    }).on("mouseout", (event, d) => {
+      d3.select(event.target)
+        .transition(200)
+        .style("stroke-width", 1)
+        .style("stroke", "#555555");
+      tooltip.transition().duration(50).style("opacity", 0);
+      tooltipTitle.html("");
+      tooltipSubtitle.html("");
+    });
   }
 
   function attachHoverEventRight() {
@@ -291,15 +306,57 @@ async function run() {
           .style("font-family", "sans-serif")
           .style("left", 20 + "px")
           .style("top", 70 + "px");
+        link2.style("stroke", (l) => {
+          if (l.source.name === d.name || l.target.name === d.name) {
+            return "#AAAAAA";
+          } else {
+            return "#555555";
+          }
+        });
+        d3.selectAll(".node")
+          .filter(function (l) {
+            console.log(l.name, d.name)
+            return d.name === l.name;
+          })
+          .attr('r', 15)
       })
+
       .on(
         "mouseout",
         (event,
-        (d) => {
-          tooltip.transition().duration(50).style("opacity", 0);
-          d3.select(event.target).transition(200).attr("r", 10);
-        })
+          (d) => {
+            document.getElementById(event.target.id.toString()).style.transform = "scale(1.0)";
+            tooltip.transition().duration(50).style("opacity", 0);
+            d3.select(event.target).transition(200).attr("r", 10);
+            link2.style("stroke", "#555555");
+            d3.select(".node").transition(200).attr('r', 10);
+            link.style("stroke", "#555555");
+          })
       );
+
+    link2.on("mouseover", (event, d) => {
+      d3.select(event.target)
+        .transition(200)
+        .style("stroke-width", 5)
+        .style("stroke", "rgb(255, 255, 255)");
+
+      tooltip.transition().duration(200).style("opacity", 0.9);
+      tooltipSubtitle.transition().duration(200).style("opacity", 0.9);
+      tooltipTitle
+        .html(d.source.name + " - " + d.target.name)
+        .style("position", "absolute")
+        .style("font-family", "sans-serif")
+        .style("left", 20 + "px")
+        .style("top", 28 + "px");
+    }).on("mouseout", (event, d) => {
+      d3.select(event.target)
+        .transition(200)
+        .style("stroke-width", 1)
+        .style("stroke", "#555555");
+      tooltip.transition().duration(50).style("opacity", 0);
+      tooltipTitle.html("");
+      tooltipSubtitle.html("");
+    });
   }
 
   function changeEpisode(episodeArray) {
@@ -357,7 +414,6 @@ async function run() {
       .attr("cy", function (d) {
         return d.y;
       });
-    ticked2();
   }
 
   function ticked2() {
@@ -390,6 +446,9 @@ async function run() {
       .enter()
       .append("circle")
       .attr("class", "node")
+      .attr("id", function (d) {
+        return d.name.replace(/\s/g, "")
+      })
       .attr("r", 10)
       .attr("fill", function (d) {
         return d.colour;
@@ -425,7 +484,10 @@ async function run() {
       .data(dataPoints)
       .enter()
       .append("circle")
-      .attr("class", "node")
+      .attr("class", "node2")
+      .attr("id", function (d) {
+        return d.name.replace(/\s/g, "")
+      })
       .attr("r", 10)
       .attr("fill", function (d) {
         return d.colour;
