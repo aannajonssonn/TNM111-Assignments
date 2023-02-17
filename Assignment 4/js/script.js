@@ -194,9 +194,7 @@ async function run() {
   var episodeSelector = d3
     .select("#episodeSelector")
     .style("opacity", 1)
-    .style("position", "absolute")
-    .style("left", window.innerWidth - 200 + "px")
-    .style("top", window.innerHeight - 200 + "px");
+    .style("position", "absolute");
 
   //get checked episodes and update graph
   episodeSelector.on("change", (event) => {
@@ -231,9 +229,15 @@ async function run() {
           .style("top", 70 + "px");
         link.style("stroke", (l) => {
           if (l.source.name === d.name || l.target.name === d.name) {
-            return "#AAAAAA";
+            return "#FFFFFF";
           } else {
             return "#555555";
+          }
+        }).style("opacity", (l) => {
+          if (l.source.name === d.name || l.target.name === d.name) {
+            return 0.9;
+          } else {
+            return 0.1;
           }
         });
         d3.selectAll(".node2")
@@ -244,9 +248,15 @@ async function run() {
           .attr('r', 15)
         link2.style("stroke", (l) => {
           if (l.source.name === d.name || l.target.name === d.name) {
-            return "#AAAAAA";
+            return "#FFFFFF";
           } else {
             return "#555555";
+          }
+        }).style("opacity", (l) => {
+          if (l.source.name === d.name || l.target.name === d.name) {
+            return 0.9;
+          } else {
+            return 0.1;
           }
         });
       })
@@ -257,9 +267,9 @@ async function run() {
           d3.select(event.target).transition(200).attr("r", 10);
           tooltipSubtitle.html("");
           tooltipTitle.html("");
-          link.style("stroke", "#555555");
+          link.style("stroke", "#555555").style("opacity", 1);
           d3.selectAll(".node2").transition(200).attr('r', 10);
-          link2.style("stroke", "#555555");
+          link2.style("stroke", "#555555").style("opacity", 1);
         }
       );
 
@@ -308,9 +318,15 @@ async function run() {
           .style("top", 70 + "px");
         link2.style("stroke", (l) => {
           if (l.source.name === d.name || l.target.name === d.name) {
-            return "#AAAAAA";
+            return "#FFFFFF";
           } else {
             return "#555555";
+          }
+        }).style("opacity", (l) => {
+          if (l.source.name === d.name || l.target.name === d.name) {
+            return 0.9;
+          } else {
+            return 0.1;
           }
         });
         d3.selectAll(".node")
@@ -318,7 +334,20 @@ async function run() {
             console.log(l.name, d.name)
             return d.name === l.name;
           })
-          .attr('r', 15)
+          .attr('r', 15);
+        link.style("stroke", (l) => {
+          if (l.source.name === d.name || l.target.name === d.name) {
+            return "#FFFFFF";
+          } else {
+            return "#555555";
+          }
+        }).style("opacity", (l) => {
+          if (l.source.name === d.name || l.target.name === d.name) {
+            return 0.9;
+          } else {
+            return 0.1;
+          }
+        });
       })
 
       .on(
@@ -331,6 +360,8 @@ async function run() {
             link2.style("stroke", "#555555");
             d3.select(".node").transition(200).attr('r', 10);
             link.style("stroke", "#555555");
+            link.style("opacity", 1);
+            link2.style("opacity", 1);
           })
       );
 

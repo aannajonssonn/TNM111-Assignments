@@ -12,6 +12,24 @@ body {
     transition: all 0.3s ease;
 }
 
+#episodeSelector {
+    position: absolute;
+    top: 2%;
+    /*place in middle of screen*/
+    left: 46.5%;
+    background: rgba(160, 160, 160 , 0.5);
+    border-radius: 5px;
+    display:flex;
+    flex-direction:column;
+    padding: 10px 5px 10px 5px;
+}
+
+#episodeSelector > form {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
 .tooltip {
     color:white;
     padding:5px;
