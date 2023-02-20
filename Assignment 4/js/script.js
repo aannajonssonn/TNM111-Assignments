@@ -125,7 +125,7 @@ async function run() {
     )
     .force("charge", d3.forceManyBody().strength(-50))
     .force("center", d3.forceCenter(width / 4, height / 2))
-    .force("gravity", d3.forceManyBody().strength(-25));
+    .force("collide", d3.forceCollide().radius(5));
 
   var simulation2 = d3
     .forceSimulation(nodes)
@@ -137,7 +137,7 @@ async function run() {
     )
     .force("charge", d3.forceManyBody().strength(-50))
     .force("center", d3.forceCenter(width / 4, height / 2))
-    .force("gravity", d3.forceManyBody().strength(-10));
+    .force("collide", d3.forceCollide().radius(5));
 
   var link = drawLinks(links);
   var link2 = drawLinksRight(links2);
@@ -161,16 +161,14 @@ async function run() {
   simulation
     .force("link")
     .links(links)
-    .distance(150)
-    .strength(0.1)
-    .iterations(5);
+    .distance(75)
+    .strength(0.3);
 
   simulation2
     .force("link")
     .links(links2)
-    .distance(150)
-    .strength(0.1)
-    .iterations(5);
+    .distance(75)
+    .strength(0.3);
 
   //changeEpisode([1, 2, 3])
 
@@ -181,7 +179,12 @@ async function run() {
     .select("#episodeSelector")
     .style("opacity", 1)
     .style("position", "absolute");
-
+  
+    //set all checkboxes to be unchecked
+  d3.selectAll("input").each(function (d) {
+    cb = d3.select(this);
+    cb.property("checked", false);
+  });
   //get checked episodes and update graph
   episodeSelector.on("change", (event) => {
     var checkedEpisodes = [];
@@ -262,8 +265,14 @@ async function run() {
     link.on("mouseover", (event, d) => {
       d3.select(event.target)
         .transition(200)
-        .style("stroke-width", 5)
+        .style("stroke-width", 4)
         .style("stroke", "rgb(255, 255, 255)");
+        link2.filter(function (l) {
+          return d.source.name === l.source.name && d.target.name === l.target.name;
+        })
+        .style("stroke-width", 4)
+        .style("stroke", "rgb(255, 255, 255)");
+
 
       tooltip.transition().duration(200).style("opacity", 0.9);
       tooltipSubtitle.transition().duration(200).style("opacity", 0.9);
@@ -276,7 +285,9 @@ async function run() {
     }).on("mouseout", (event, d) => {
       d3.select(event.target)
         .transition(200)
-        .style("stroke-width", 1)
+        .style("stroke-width", 2)
+        .style("stroke", "#555555");
+        link2.style("stroke-width", 2)
         .style("stroke", "#555555");
       tooltip.transition().duration(50).style("opacity", 0);
       tooltipTitle.html("");
@@ -340,11 +351,11 @@ async function run() {
         "mouseout",
         (event,
           (d) => {
-            document.getElementById(event.target.id.toString()).style.transform = "scale(1.0)";
             tooltip.transition().duration(50).style("opacity", 0);
             d3.select(event.target).transition(200).attr("r", 10);
             link2.style("stroke", "#555555");
-            d3.select(".node").transition(200).attr('r', 10);
+            link.style("stroke", "#555555");
+            d3.selectAll(".node").transition(200).attr('r', 10);
             link.style("stroke", "#555555");
             link.style("opacity", 1);
             link2.style("opacity", 1);
@@ -354,7 +365,12 @@ async function run() {
     link2.on("mouseover", (event, d) => {
       d3.select(event.target)
         .transition(200)
-        .style("stroke-width", 5)
+        .style("stroke-width", 4)
+        .style("stroke", "rgb(255, 255, 255)");
+        link.filter(function (l) {
+          return d.source.name === l.source.name && d.target.name === l.target.name;
+        })
+        .style("stroke-width", 4)
         .style("stroke", "rgb(255, 255, 255)");
 
       tooltip.transition().duration(200).style("opacity", 0.9);
@@ -366,10 +382,7 @@ async function run() {
         .style("left", 20 + "px")
         .style("top", 28 + "px");
     }).on("mouseout", (event, d) => {
-      d3.select(event.target)
-        .transition(200)
-        .style("stroke-width", 1)
-        .style("stroke", "#555555");
+      d3.selectAll(".link").style("stroke", "#555555").style("stroke-width", 2);
       tooltip.transition().duration(50).style("opacity", 0);
       tooltipTitle.html("");
       tooltipSubtitle.html("");
