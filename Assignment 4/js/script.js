@@ -124,8 +124,8 @@ async function run() {
       })
     )
     .force("charge", d3.forceManyBody().strength(-50))
-    .force("center", d3.forceCenter(width / 4, height / 2))
-    .force("collide", d3.forceCollide().radius(5));
+    .force("center", d3.forceCenter(width / 4, height / 2).strength(0.5))
+    .on("tick", ticked);
 
   var simulation2 = d3
     .forceSimulation(nodes)
@@ -136,8 +136,8 @@ async function run() {
       })
     )
     .force("charge", d3.forceManyBody().strength(-50))
-    .force("center", d3.forceCenter(width / 4, height / 2))
-    .force("collide", d3.forceCollide().radius(5));
+    .force("center", d3.forceCenter(width / 4, height / 2).strength(0.5))
+    .on("tick", ticked2);
 
   var link = drawLinks(links);
   var link2 = drawLinksRight(links2);
@@ -155,8 +155,8 @@ async function run() {
   var tooltipTitle = tooltip.append("h1").attr("class", "tooltip-title");
   var tooltipSubtitle = tooltip.append("h2").attr("class", "tooltip-subtitle");
 
-  simulation.nodes(nodes).on("tick", ticked);
-  simulation2.nodes(nodes2).on("tick", ticked2);
+  simulation.nodes(nodes);
+  simulation2.nodes(nodes2);
 
   simulation
     .force("link")
@@ -412,15 +412,16 @@ async function run() {
       epNodes = nodes;
     }
     simulation.force("link").links(epLinks);
-    simulation.alpha(1).restart();
-
+    
     link.remove();
     link = drawLinks(epLinks);
-
+    
     node.remove();
     node = drawNodes(epNodes);
-
+    
     attachHoverEvent();
+    simulation.alpha(2).restart();
+    simulation2.alpha(2).restart();
   }
 
   function ticked() {
